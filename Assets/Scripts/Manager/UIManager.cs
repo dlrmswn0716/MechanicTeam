@@ -13,6 +13,12 @@ public class UIManager : MonoBehaviour
     public Image interactionIcon;
     public GameObject AchieveObj;
 
+    public GameObject InteractUI;
+
+    public  GameObject testObj;
+    public bool isInter = false;
+
+    private bool timeOff = false;
     private float _time = 0.0f;
 
     // singleton 처리
@@ -32,7 +38,9 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timeCalc();
+        if(!timeOff)
+            timeCalc();
+
     }
 
     //시간 계산
