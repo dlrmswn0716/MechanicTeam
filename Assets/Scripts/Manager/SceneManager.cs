@@ -1,24 +1,18 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class SceneManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static SceneManager instance;
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
             Destroy(gameObject);
-
-    }
-
-    void Init()
-    {
-
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
