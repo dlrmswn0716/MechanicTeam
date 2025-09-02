@@ -10,7 +10,7 @@ public class FindEnemy : MonoBehaviour
     [SerializeField] private string playerTag = "Player";
     [SerializeField] private float rayInterval = 1f;
     //원뿔 범위
-    [SerializeField] private float coneAngle = 60f;
+    [SerializeField] private float forwardAngle = 15f;
     [SerializeField] private bool showArea = true;
 
     private List<Transform> detectedPlayers = new List<Transform>();
@@ -45,7 +45,7 @@ public class FindEnemy : MonoBehaviour
             if (!collider.CompareTag(playerTag)) continue;
 
             // 3단계: 삼각형 범위 내에 있는지 체크
-            if (IsInTriangleRange(collider.transform.position))
+            if (IsInForwardRange(collider.transform.position))
             {
                 // 4단계: 처음 충돌한 레이캐스트만 검사
                 if (HasClearLineOfSight(collider.transform.position))
@@ -62,14 +62,14 @@ public class FindEnemy : MonoBehaviour
             Debug.Log("플레이어를 찾지 못함.");
     }
 
-    bool IsInTriangleRange(Vector3 targetPosition)
+    bool IsInForwardRange(Vector3 targetPosition)
     {
         Vector3 directionToTarget = (targetPosition - transform.position).normalized;
         float angleToTarget = Vector3.Angle(transform.forward, directionToTarget);
         float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
 
-        // 각도와 거리 모두 체크
-        return angleToTarget <= coneAngle * 0.5f && distanceToTarget <= detectionDistance;
+        // 변경된 부분: coneAngle * 0.5f → forwardAngle (또는 더 작은 각도)
+        return angleToTarget <= forwardAngle && distanceToTarget <= detectionDistance;
     }
 
     bool HasClearLineOfSight(Vector3 targetPosition)
@@ -99,7 +99,7 @@ public class FindEnemy : MonoBehaviour
         if (!showArea) return;
 
         // 삼각형 범위 시각화
-        float halfAngle = coneAngle * 0.5f;
+        float halfAngle = forwardAngle * 0.5f;
         Vector3 leftBoundary = Quaternion.AngleAxis(-halfAngle, Vector3.up) * transform.forward * detectionDistance;
         Vector3 rightBoundary = Quaternion.AngleAxis(halfAngle, Vector3.up) * transform.forward * detectionDistance;
 
