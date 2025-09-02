@@ -1,22 +1,22 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FindEnemy : MonoBehaviour
 {
-    // ¿ø»Ô °Å¸®
+    // ì›ë¿” ê±°ë¦¬
     [SerializeField] private float detectionDistance = 10f;
-    //ÇÃ·¹ÀÌ¾î ÅÂ±×¸¦ Ã£À½
+    //í”Œë ˆì´ì–´ íƒœê·¸ë¥¼ ì°¾ìŒ
     [SerializeField] private string playerTag = "Player";
     [SerializeField] private float rayInterval = 1f;
-    //¿ø»Ô ¹üÀ§
+    //ì›ë¿” ë²”ìœ„
     [SerializeField] private float forwardAngle = 15f;
     [SerializeField] private bool showArea = true;
 
     private List<Transform> detectedPlayers = new List<Transform>();
     private Coroutine detectionCoroutine;
 
-    //ÄÚ·çÆ¾ ¼øÈ¯
+    //ì½”ë£¨í‹´ ìˆœí™˜
     void Start()
     {
         detectionCoroutine = StartCoroutine(DetectionLoop());
@@ -31,47 +31,44 @@ public class FindEnemy : MonoBehaviour
         }
     }
 
-    //±¸ ¹üÀ§ -> »ï°¢Çü ¹üÀ§ -> ÇÃ·¹ÀÌ¾î ¿©ºÎ È®ÀÎ
+    //êµ¬ ë²”ìœ„ -> ì‚¼ê°í˜• ë²”ìœ„ -> í”Œë ˆì´ì–´ ì—¬ë¶€ í™•ì¸
     void DetectAllObjectsInTriangle()
     {
         detectedPlayers.Clear();
 
-        // 1´Ü°è: ¹üÀ§ ³» ¸ğµç Äİ¶óÀÌ´õ Ã£±â (±¸ ¹üÀ§ÀÇ ½ºÄµ)
+        // 1ë‹¨ê³„: ë²”ìœ„ ë‚´ ëª¨ë“  ì½œë¼ì´ë” ì°¾ê¸° (êµ¬ ë²”ìœ„ì˜ ìŠ¤ìº”)
         Collider[] allColliders = Physics.OverlapSphere(transform.position, detectionDistance);
 
         foreach (var collider in allColliders)
         {
-            // 2´Ü°è: ÇÃ·¹ÀÌ¾î ÅÂ±× Ã¼Å©
+            // 2ë‹¨ê³„: í”Œë ˆì´ì–´ íƒœê·¸ ì²´í¬
             if (!collider.CompareTag(playerTag)) continue;
 
-            // 3´Ü°è: »ï°¢Çü ¹üÀ§ ³»¿¡ ÀÖ´ÂÁö Ã¼Å©
+            // 3ë‹¨ê³„: ì‚¼ê°í˜• ë²”ìœ„ ë‚´ì— ìˆëŠ”ì§€ ì²´í¬
             if (IsInForwardRange(collider.transform.position))
             {
-                // 4´Ü°è: Ã³À½ Ãæµ¹ÇÑ ·¹ÀÌÄ³½ºÆ®¸¸ °Ë»ç
+                // 4ë‹¨ê³„: ì²˜ìŒ ì¶©ëŒí•œ ë ˆì´ìºìŠ¤íŠ¸ë§Œ ê²€ì‚¬
                 if (HasClearLineOfSight(collider.transform.position))
                 {
+                    //TO-DOê°ì§€ í”Œë ˆì´ì–´ ë¡œê·¸ ì‚­ì œì‹œ ì‚­ì œ
                     detectedPlayers.Add(collider.transform);
-                    OnPlayerDetected(collider.transform);
+                    Debug.Log($"í”Œë ˆì´ì–´ ë°œê²¬: {collider.transform.name}");
                 }
             }
         }
-
-        if (detectedPlayers.Count > 0)
-            Debug.Log($"»ï°¢Çü ¹üÀ§ ÀüÃ¼ °Ë»ç - °¨ÁöµÈ ÇÃ·¹ÀÌ¾î: {detectedPlayers[0].name}");
-        else
-            Debug.Log("ÇÃ·¹ÀÌ¾î¸¦ Ã£Áö ¸øÇÔ.");
     }
 
+    //ì‚¼ê°í˜• ë²”ìœ„ ì²´í¬
     bool IsInForwardRange(Vector3 targetPosition)
     {
         Vector3 directionToTarget = (targetPosition - transform.position).normalized;
         float angleToTarget = Vector3.Angle(transform.forward, directionToTarget);
         float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
 
-        // º¯°æµÈ ºÎºĞ: coneAngle * 0.5f ¡æ forwardAngle (¶Ç´Â ´õ ÀÛÀº °¢µµ)
         return angleToTarget <= forwardAngle && distanceToTarget <= detectionDistance;
     }
 
+    //ë§‰ê³  ìˆëŠ” ì˜¤ë¸Œì íŠ¸ ì²´í¬
     bool HasClearLineOfSight(Vector3 targetPosition)
     {
         Vector3 directionToTarget = (targetPosition - transform.position).normalized;
@@ -80,25 +77,19 @@ public class FindEnemy : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, directionToTarget, out hit, distanceToTarget))
         {
-            // Å¸°ÙÀÌ ¸Â´ÂÁö È®ÀÎ (Àå¾Ö¹°ÀÌ ¾Æ´Ñ)
+            // íƒ€ê²Ÿì´ ë§ëŠ”ì§€ í™•ì¸ (ì¥ì• ë¬¼ì´ ì•„ë‹Œ)
             return hit.collider.CompareTag(playerTag);
         }
 
-        return true; // ¾Æ¹«°Íµµ ¸·Áö ¾ÊÀ½
+        return true; // ì•„ë¬´ê²ƒë„ ë§‰ì§€ ì•ŠìŒ
     }
 
-    private void OnPlayerDetected(Transform player)
-    {
-        float distance = Vector3.Distance(transform.position, player.position);
-        Debug.Log($"ÇÃ·¹ÀÌ¾î ¹ß°ß: {player.name}, °Å¸®: {distance:F2}m");
-    }
-
-    //TO-DO : »ï°¢Çü ½Ã°¢È­ ÄÚµå (¿Ï¼º ½Ã »èÁ¦)
+    //TO-DO : ì‚¼ê°í˜• ì‹œê°í™” ì½”ë“œ (ì™„ì„± ì‹œ ì‚­ì œ)
     private void OnDrawGizmos()
     {
         if (!showArea) return;
 
-        // »ï°¢Çü ¹üÀ§ ½Ã°¢È­
+        // ì‚¼ê°í˜• ë²”ìœ„ ì‹œê°í™”
         float halfAngle = forwardAngle * 0.5f;
         Vector3 leftBoundary = Quaternion.AngleAxis(-halfAngle, Vector3.up) * transform.forward * detectionDistance;
         Vector3 rightBoundary = Quaternion.AngleAxis(halfAngle, Vector3.up) * transform.forward * detectionDistance;
@@ -108,7 +99,7 @@ public class FindEnemy : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
         Gizmos.DrawLine(transform.position + leftBoundary, transform.position + rightBoundary);
 
-        // °¨ÁöµÈ ÇÃ·¹ÀÌ¾îµé Ç¥½Ã
+        // ê°ì§€ëœ í”Œë ˆì´ì–´ë“¤ í‘œì‹œ
         Gizmos.color = Color.red;
         foreach (var player in detectedPlayers)
         {
