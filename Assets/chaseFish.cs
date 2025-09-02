@@ -10,18 +10,19 @@ public class chaseFish : MonoBehaviour
     public float offsetY = 0.5f; // 타겟의 Y축 오프셋
     private GameObject currentTarget;
     private float timer = 0f;
-
     public float moveSpeed = 5f; // 이동 속도
+
+    public LayerMask groundLayer;         // 바닥 레이어 지정
     void Update()
     {
         timer += Time.deltaTime;
-        if ( timer >= updateInterval)
+        if (timer >= updateInterval)
         {
             currentTarget = FindNearestFish();
             timer = 0f;
         }
 
-        if( currentTarget != null)
+        if (currentTarget != null)
         {
             float dist = Vector3.Distance(transform.position, currentTarget.transform.position);
             if (dist <= chaseDistance)
@@ -43,9 +44,12 @@ public class chaseFish : MonoBehaviour
                     Quaternion lookRot = Quaternion.LookRotation(direction);
                     transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, 10f * Time.deltaTime);
                 }
+
             }
 
         }
+        // Raycast로 바닥 법선 구하기
+        StickToGround(); // 항상 바닥에 붙도록 처리
     }
 
     GameObject FindNearestFish()
@@ -75,5 +79,25 @@ public class chaseFish : MonoBehaviour
             currentTarget = null; // 새 타겟은 다음 Update에서 자동 탐색
         }
     }
+
+    void StickToGround()
+    {
+
+        Ray ray = new Ray(transform.position + Vector3.up * 3f, Vector3.down);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 10f, groundLayer))
+        {
+            // 위치 보정
+            Vector3 pos = transform.position;
+            pos.y = hit.point.y + offsetY + 0.5f;
+            transform.position = pos;
+
+
+            // 경사에 맞춰 회전 (앞 방향 유지)
+            Quaternion slopeRot = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            transform.rotation = Quaternion.Slerp(transform.rotation, slopeRot, 5f * Time.deltaTime);
+        }
+    }
+
 }
 
