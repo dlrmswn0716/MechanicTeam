@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
@@ -11,7 +12,7 @@ public class MomCat : MonoBehaviour
     public float mouseMovementSpeedY = 250f;
     public Transform playerCamera;
     public float mouseXRotationLimit = 50f;
-    private float xRotation = 50f;
+    private float xRotation = -50f;
 
     public float jumpForce = 5f;
     private bool isGrounded = true;
@@ -20,10 +21,17 @@ public class MomCat : MonoBehaviour
     private bool isMove = false;
     private bool isPrevMove = false;
 
+    private bool isInteracting = false;
+    private bool canInteracting = false;
+    public GameObject interactObject = null;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -31,7 +39,7 @@ public class MomCat : MonoBehaviour
     {
         HandleMove();
         HandleJump();
-        HandleInteracte();
+        HandleInteract();
     }
 
     private void LateUpdate()
@@ -99,14 +107,30 @@ public class MomCat : MonoBehaviour
             isGrounded = true;
             HandleMove();
         }
+
+        if (collision.gameObject.name == "Fish" && isInteracting == false)
+        {
+            interactObject = collision.gameObject;
+            canInteracting = true;
+        }
     }
 
-    void HandleInteracte()
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.name == "Fish" && isInteracting == false)
+        {
+            interactObject = null;
+            canInteracting = false;
+        }
+    }
+
+    void HandleInteract()
     {
         if (Input.GetKeyDown(KeyCode.E) == false)
             return;
 
         // TODO : Interact Object
+        Interact();
     }
 
     void SetLegMovement(bool isActive)
@@ -118,4 +142,37 @@ public class MomCat : MonoBehaviour
         }
     }
 
+    void Interact()
+    {
+        if (canInteracting == false)
+            return;
+
+        if (isInteracting == false)
+        {
+            isInteracting = true;
+            // 물기
+            Transform attachPoint = transform.Find("FishOffset");
+            interactObject.transform.SetParent(attachPoint);
+
+            Rigidbody interactRb = interactObject.GetComponent<Rigidbody>();
+            interactRb.isKinematic = true;
+
+            BoxCollider interactBC = interactObject.GetComponent<BoxCollider>();
+            interactBC.isTrigger = true;
+
+            Debug.Log("Enter");
+        }
+        else
+        {
+            isInteracting = false;
+            // 놓아주기
+            interactObject.transform.SetParent(null);
+
+            Rigidbody interactRb = interactObject.GetComponent<Rigidbody>();
+            interactRb.isKinematic = false;
+
+            BoxCollider interactBC = interactObject.GetComponent<BoxCollider>();
+            interactBC.isTrigger = false;
+        }
+    }
 }
