@@ -6,6 +6,7 @@ public class FindEnemy : MonoBehaviour
 {
     // 원뿔 거리
     [SerializeField] private float detectionDistance = 10f;
+    //플레이어 태그를 찾음
     [SerializeField] private string playerTag = "Player";
     [SerializeField] private float rayInterval = 1f;
     //원뿔 범위
