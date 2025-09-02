@@ -9,9 +9,10 @@ public class FindEnemy : MonoBehaviour
     //플레이어 태그를 찾음
     [SerializeField] private string playerTag = "Player";
     [SerializeField] private float rayInterval = 1f;
+    [SerializeField] private float delayInterval = 3f;
     //원뿔 범위
     [SerializeField] private float forwardAngle = 15f;
-    [SerializeField] private bool showArea = true;
+    [SerializeField] private bool showArea = false;
 
     private List<Transform> detectedPlayers = new List<Transform>();
     private Coroutine detectionCoroutine;
@@ -26,8 +27,11 @@ public class FindEnemy : MonoBehaviour
     {
         while (true)
         {
+            yield return new WaitForSeconds(delayInterval);
             DetectAllObjectsInTriangle();
+            showArea = true;
             yield return new WaitForSeconds(rayInterval);
+            showArea = false;
         }
     }
 
