@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 
 public class MomCat : MonoBehaviour
@@ -10,7 +11,7 @@ public class MomCat : MonoBehaviour
     public float mouseMovementSpeedY = 250f;
     public Transform playerCamera;
     public float mouseXRotationLimit = 50f;
-    private float xRotation = 0f;
+    private float xRotation = 50f;
 
     public float jumpForce = 5f;
     private bool isGrounded = true;
@@ -23,7 +24,6 @@ public class MomCat : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        xRotation = playerCamera.eulerAngles.x;
     }
 
     // Update is called once per frame
@@ -44,7 +44,15 @@ public class MomCat : MonoBehaviour
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveZ = Input.GetAxisRaw("Vertical");
 
-        Vector3 moveDir = new Vector3(moveX, 0, moveZ).normalized;
+        Vector3 forward = playerCamera.forward;
+        forward.y = 0;
+        forward.Normalize();
+
+        Vector3 right = playerCamera.right;
+        right.y = 0;
+        right.Normalize();
+
+        Vector3 moveDir = (forward * moveZ + right * moveX).normalized;
 
         rb.MovePosition(transform.position + moveDir * moveSpeed * Time.deltaTime);
 
