@@ -1,7 +1,5 @@
-using Unity.VisualScripting;
+ï»¿using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
-using System.Runtime.InteropServices;
 
 
 public class MomCat : MonoBehaviour
@@ -23,7 +21,7 @@ public class MomCat : MonoBehaviour
     private bool isPrevMove = false;
 
     private bool isInteracting = false;
-    private bool canInteracting = false;
+    public bool canInteracting = false;
     public GameObject interactObject = null;
 
     private bool isFirstMouseClicked = false;
@@ -37,6 +35,9 @@ public class MomCat : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //TO-DO : ìž„ì‹œ
+        GameManager.instance.Init();
+
         rb = GetComponent<Rigidbody>();
 
         xRotation = 0f;
@@ -145,6 +146,12 @@ public class MomCat : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Achievement"))
+            GameManager.instance.Achievement = true;
+    }
+
     void HandleInteract()
     {
         if (InputManager.instance.GetInteractInput() == false)
@@ -179,7 +186,7 @@ public class MomCat : MonoBehaviour
             if (isInteracting == false)
             {
                 isInteracting = true;
-                // ¹°±â
+                // ë¬¼ê¸°
                 Transform attachPoint = transform.Find("FishOffset");
                 interactObject.transform.SetParent(attachPoint);
 
@@ -196,7 +203,7 @@ public class MomCat : MonoBehaviour
             else
             {
                 isInteracting = false;
-                // ³õ¾ÆÁÖ±â
+                // ë†“ì•„ì£¼ê¸°
                 interactObject.transform.SetParent(null);
 
                 Rigidbody interactRb = interactObject.GetComponent<Rigidbody>();

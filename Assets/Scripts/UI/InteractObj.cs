@@ -5,7 +5,14 @@ public class InteractObj : MonoBehaviour
     private bool isShowUI = false;
     public GameObject testUI;
     private Transform trn;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public e_ItemType ItemType;
+    
+    public enum e_ItemType
+    {
+        Fish,
+        Achievement,
+        Goal
+    }
     void Start()
     {
         trn = null;
@@ -22,13 +29,27 @@ public class InteractObj : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag=="Player")
+        if(ItemType == e_ItemType.Achievement && other.CompareTag("Player"))
+        {
+            GameManager.instance.Achievement = true;
+            UIManager.Instance.GetAchieve();
+            Destroy(gameObject);
+        }
+        else if(other.tag=="Player"&&!GameManager.instance.PC.canInteracting)
         {
             isShowUI = true;
-            Vector3 calcPos = Vector3.Lerp(gameObject.transform.position, other.transform.position, 0.5f);
-            testUI.transform.position = calcPos;
+            testUI.transform.position = new Vector3(transform.position.x,transform.position.y+2f,transform.position.z);
             trn = other.transform;
             testUI.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            isShowUI = false;
+            testUI.SetActive(false);
         }
     }
 }
