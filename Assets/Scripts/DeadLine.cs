@@ -9,6 +9,7 @@ public class DeadLine : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             UIManager.Instance.OverUI();
+            Time.timeScale = 0f;
         }
     }
 }

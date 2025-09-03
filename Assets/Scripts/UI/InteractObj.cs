@@ -65,6 +65,7 @@ public class InteractObj : MonoBehaviour
         {
             Debug.Log(" 골!");
             UIManager.Instance.ClearUI();
+            Time.timeScale = 0f;
         }
     }
 
