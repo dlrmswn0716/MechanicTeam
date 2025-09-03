@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public MomCat PC;
-    public bool Achievement = false;
+    public bool Achievement;
     private void Awake()
     {
         if(instance == null)
