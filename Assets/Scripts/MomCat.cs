@@ -12,6 +12,7 @@ public class MomCat : MonoBehaviour
     public Transform playerCamera;
     private Transform playerCameraPivot;
     private Transform catBody;
+    private Transform catMain;
     public float mouseXRotationLimit = 50f;
     private float xRotation = -50f;
     public float mouseXRotationMinLimit = -80f;
@@ -41,7 +42,8 @@ public class MomCat : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         playerCameraPivot = transform.Find("CameraPivot");
-        catBody = transform.Find("Body");
+        catBody = transform.Find("Cat/Body");
+        catMain = transform.Find("Cat");
 
         xRotation = 0f;
         playerCamera.localRotation = Quaternion.Euler(0f, 180f, 0f);
@@ -61,6 +63,7 @@ public class MomCat : MonoBehaviour
         HandleInteract();
         HandleMouseLook();
         HandleMouseClick();
+        //StickToGround();
     }
 
     void HandleMove()
@@ -239,6 +242,26 @@ public class MomCat : MonoBehaviour
                 interactObject.gameObject.tag = "Fish";
                 Debug.Log(interactObject.gameObject.tag);
             }
+        }
+    }
+
+    void StickToGround()
+    {
+        Debug.Log("StickTo");
+        Ray ray = new Ray(transform.position + Vector3.up * 3f, Vector3.down);
+        Debug.DrawRay(ray.origin, ray.direction *5f, Color.red);
+        if (Physics.Raycast(ray, out RaycastHit hit, 3f, groundLayer))
+        {
+            Debug.Log("True");
+            // 위치 보정
+            //Vector3 pos = catMain.transform.position;
+            //pos.y = hit.point.y + 0.5f;
+           // catMain.transform.position = pos;
+
+
+            // 경사에 맞춰 회전 (앞 방향 유지)
+            Quaternion slopeRot = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            catMain.transform.rotation = Quaternion.Slerp(catMain.transform.rotation, slopeRot, 5f * Time.deltaTime);
         }
     }
 }
