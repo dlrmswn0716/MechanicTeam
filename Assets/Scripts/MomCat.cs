@@ -46,7 +46,7 @@ public class MomCat : MonoBehaviour
     void Start()
     {
         //TO-DO : 임시
-        GameManager.instance.Init();
+        GameManager.instance.Init(gameObject);
 
         rb = GetComponent<Rigidbody>();
         playerCameraPivot = transform.Find("CameraPivot");

@@ -92,6 +92,7 @@ public class chaseFish : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(fishTag))
         {
+            collision.gameObject.GetComponent<InteractObj>().HideUI();
             Destroy(collision.gameObject);
             currentTarget = null; // 새 타겟은 다음 Update에서 자동 탐색
         }
