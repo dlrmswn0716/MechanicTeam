@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class SceneManager : MonoBehaviour
 {
     public static SceneManager instance;
-    [SerializeField] private SceneType _sceneType;    
-    
-   enum SceneType
+    public SceneType _sceneType { get; private set; }
+
+    public enum SceneType
     {
         Lobby,
         Stage1,

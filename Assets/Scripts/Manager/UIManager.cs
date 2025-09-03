@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,7 +33,24 @@ public class UIManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        if(SceneManager.instance._sceneType != SceneManager.SceneType.Lobby)
+        {
+            MouseLock(true);
+        }
+    }
+
+    private void MouseLock(bool isLock)
+    {
+        if (isLock)
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 
     // Update is called once per frame
@@ -63,6 +81,7 @@ public class UIManager : MonoBehaviour
     // 클리어 UI SHOW
     public void ClearUI()
     {
+        MouseLock(false);
         timeOff = true;
         clear.SetActive(true);
         //TO-DO : 추후에 스크립터블 오브젝트를 사용해서 조건 확인
@@ -83,6 +102,7 @@ public class UIManager : MonoBehaviour
     // 게임오버 UI SHOW
     public void OverUI()
     {
+        MouseLock(false);
         timeOff = true;
         over.SetActive(true);
     }
