@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
 
     private bool timeOff = false;
     private float _time = 0.0f;
+    private bool isAchieve = false;
 
     // singleton 처리
     private void Awake()
@@ -76,6 +77,7 @@ public class UIManager : MonoBehaviour
     public void GetAchieve()
     {
         AchieveObj.GetComponent<Image>().color = Color.red;
+        isAchieve= true;
     }
 
     // 클리어 UI SHOW
@@ -89,7 +91,7 @@ public class UIManager : MonoBehaviour
         if (_time <= 1.0f)
             checkCnt++;
         //TO - DO : 털뭉치 획득 여부 확인
-        if (true)
+        if (isAchieve)
             checkCnt++;
         Image[] images = clear.transform.GetChild(0).GetComponentsInChildren<Image>();
         for(int i = 0; i < checkCnt; i++)
