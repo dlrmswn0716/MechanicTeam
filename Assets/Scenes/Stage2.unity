@@ -8086,6 +8086,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chase_Cat (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3016628090539401562, guid: f8bd807daacf4ea46b2d513f60662455, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4187595481856987529, guid: f8bd807daacf4ea46b2d513f60662455, type: 3}
       propertyPath: m_LocalPosition.x
       value: 548.148
