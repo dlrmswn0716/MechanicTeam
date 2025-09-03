@@ -34,6 +34,8 @@ public class MomCat : MonoBehaviour
     private bool isAltActive = false;
 
     public GameObject MiniCat;
+    public LayerMask groundLayer;         // 바닥 레이어 지정
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -63,7 +65,7 @@ public class MomCat : MonoBehaviour
         HandleInteract();
         HandleMouseLook();
         HandleMouseClick();
-        //StickToGround();
+        // StickToGround();
     }
 
     void HandleMove()
@@ -207,6 +209,12 @@ public class MomCat : MonoBehaviour
         if (canInteracting == false)
             return;
 
+        if (interactObject == null)
+        {
+            canInteracting = false;
+            return;
+        }
+
         if (interactObject.name.Contains("Fish"))
         {
             if (isInteracting == false)
@@ -248,16 +256,11 @@ public class MomCat : MonoBehaviour
     void StickToGround()
     {
         Debug.Log("StickTo");
-        Ray ray = new Ray(transform.position + Vector3.up * 3f, Vector3.down);
-        Debug.DrawRay(ray.origin, ray.direction *5f, Color.red);
-        if (Physics.Raycast(ray, out RaycastHit hit, 3f, groundLayer))
+        Ray ray = new Ray(transform.position, Vector3.down);
+        Debug.DrawRay(ray.origin, ray.direction * 2f, Color.red);
+        if (Physics.Raycast(ray, out RaycastHit hit, 2f))
         {
             Debug.Log("True");
-            // 위치 보정
-            //Vector3 pos = catMain.transform.position;
-            //pos.y = hit.point.y + 0.5f;
-           // catMain.transform.position = pos;
-
 
             // 경사에 맞춰 회전 (앞 방향 유지)
             Quaternion slopeRot = Quaternion.FromToRotation(Vector3.up, hit.normal);
