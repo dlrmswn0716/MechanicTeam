@@ -22,13 +22,21 @@ public class InteractObj : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag=="Player")
+        if(other.tag=="Player"&&!GameManager.instance.PC.canInteracting)
         {
             isShowUI = true;
-            Vector3 calcPos = Vector3.Lerp(gameObject.transform.position, other.transform.position, 0.5f);
-            testUI.transform.position = calcPos;
+            testUI.transform.position = new Vector3(transform.position.x,transform.position.y+2f,transform.position.z);
             trn = other.transform;
             testUI.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            isShowUI = false;
+            testUI.SetActive(false);
         }
     }
 }

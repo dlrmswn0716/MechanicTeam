@@ -1,9 +1,11 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public MomCat PC;
     private void Awake()
     {
         if(instance == null)
@@ -15,15 +17,16 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
     }
-
-    void Init()
+    
+    public void Init()
     {
 
+        PC = GameObject.FindGameObjectWithTag("Player").GetComponent<MomCat>();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        Init();
     }
 
     // Update is called once per frame

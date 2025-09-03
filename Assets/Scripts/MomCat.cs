@@ -1,6 +1,5 @@
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 
 public class MomCat : MonoBehaviour
@@ -22,12 +21,14 @@ public class MomCat : MonoBehaviour
     private bool isPrevMove = false;
 
     private bool isInteracting = false;
-    private bool canInteracting = false;
+    public bool canInteracting = false;
     public GameObject interactObject = null;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        GameManager.instance.PC = this;
+
         rb = GetComponent<Rigidbody>();
 
         Cursor.visible = false;

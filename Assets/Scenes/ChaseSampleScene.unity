@@ -286,6 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b5c2710dfabedc47be34afe73f502e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PC: {fileID: 0}
 --- !u!4 &116289917
 Transform:
   m_ObjectHideFlags: 0
@@ -1577,18 +1578,6 @@ PrefabInstance:
     - target: {fileID: 24293516322395194, guid: 9424a343816d3ba45b1355f0f623a1b5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3267527630454047127, guid: 9424a343816d3ba45b1355f0f623a1b5, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1622037288}
-    - target: {fileID: 3267527630454047127, guid: 9424a343816d3ba45b1355f0f623a1b5, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: NextScene
-      objectReference: {fileID: 0}
-    - target: {fileID: 3267527630454047127, guid: 9424a343816d3ba45b1355f0f623a1b5, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SceneManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3496660746444127425, guid: 9424a343816d3ba45b1355f0f623a1b5, type: 3}
       propertyPath: m_Name
