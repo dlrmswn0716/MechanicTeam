@@ -1,25 +1,21 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class CatChaseFish : MonoBehaviour
+public class chaseFish : MonoBehaviour
 {
-    public float chaseDistance = 10f;   // 최대 인식 거리
-    public string fishTag = "Fish";     // 생선 태그
-    public float updateInterval = 0.5f; // 목표 갱신 주기
+    public float chaseDistance = 10f; // 최대 인식 거리
+    public string fishTag = "Fish"; // 생선 태그
+    public float updateInterval = 1f; // 목표 갱신 주기
 
-    private NavMeshAgent agent;
-    private float timer = 0f;
+    public float offsetY = 0.5f; // 타겟의 Y축 오프셋
     private GameObject currentTarget;
+    private float timer = 0f;
+    public float moveSpeed = 5f; // 이동 속도
 
-    void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-    }
-
+    public LayerMask groundLayer;         // 바닥 레이어 지정
     void Update()
     {
         timer += Time.deltaTime;
-
         if (timer >= updateInterval)
         {
             currentTarget = FindNearestFish();
@@ -29,23 +25,31 @@ public class CatChaseFish : MonoBehaviour
         if (currentTarget != null)
         {
             float dist = Vector3.Distance(transform.position, currentTarget.transform.position);
-
-            // chaseDistance 이내일 때만 추적
             if (dist <= chaseDistance)
             {
-                agent.isStopped = false;
-                agent.SetDestination(currentTarget.transform.position);
+                // 타겟 위치 (Y축 오프셋 적용)
+                Vector3 targetPos = currentTarget.transform.position + new Vector3(0, offsetY, 0); ;
+
+                // 이동 (속도 = moveSpeed)
+                transform.position = Vector3.MoveTowards(
+                    transform.position,
+                    targetPos,
+                    moveSpeed * Time.deltaTime
+                );
+
+                // 바라보는 방향도 자연스럽게 회전
+                Vector3 direction = (targetPos - transform.position).normalized;
+                if (direction != Vector3.zero)
+                {
+                    Quaternion lookRot = Quaternion.LookRotation(direction);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, 10f * Time.deltaTime);
+                }
+
             }
-            // chaseDistance보다 멀면 아예 안 감
-            else
-            {
-                agent.isStopped = true;
-            }
+
         }
-        else
-        {
-            agent.isStopped = true; // 생선 없으면 멈춤
-        }
+        // Raycast로 바닥 법선 구하기
+        StickToGround(); // 항상 바닥에 붙도록 처리
     }
 
     GameObject FindNearestFish()
@@ -58,8 +62,6 @@ public class CatChaseFish : MonoBehaviour
         foreach (GameObject fish in fishes)
         {
             float dist = Vector3.Distance(currentPos, fish.transform.position);
-
-            // chaseDistance 안에 있는 생선만 고려
             if (dist < minDist && dist <= chaseDistance)
             {
                 minDist = dist;
@@ -73,10 +75,29 @@ public class CatChaseFish : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(fishTag))
         {
-            Destroy(collision.gameObject); // 생선 삭제
-            currentTarget = FindNearestFish(); // 바로 다음 타겟 갱신
-            agent.isStopped = currentTarget == null; // 없으면 멈춤
+            Destroy(collision.gameObject);
+            currentTarget = null; // 새 타겟은 다음 Update에서 자동 탐색
         }
     }
+
+    void StickToGround()
+    {
+
+        Ray ray = new Ray(transform.position + Vector3.up * 3f, Vector3.down);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 10f, groundLayer))
+        {
+            // 위치 보정
+            Vector3 pos = transform.position;
+            pos.y = hit.point.y + offsetY + 0.5f;
+            transform.position = pos;
+
+
+            // 경사에 맞춰 회전 (앞 방향 유지)
+            Quaternion slopeRot = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            transform.rotation = Quaternion.Slerp(transform.rotation, slopeRot, 5f * Time.deltaTime);
+        }
+    }
+
 }
 
