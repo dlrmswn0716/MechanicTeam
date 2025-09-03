@@ -44,6 +44,14 @@ public class SceneManager : MonoBehaviour
         string sceneName = _sceneType.ToString();
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
     }
+
+    public void LobbyScene()
+    {
+        Time.timeScale = 1f;
+        _sceneType = SceneType.Lobby;
+        string sceneName = _sceneType.ToString();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -87,6 +95,12 @@ public class SceneManager : MonoBehaviour
                 item.onClick.RemoveAllListeners();
                 item.onClick.AddListener(ReLoadScene);
                 Debug.Log($"'{item.name}' 버튼에 ReloadScene 연결됨");
+            }
+            else if(item.name == "LobbyBtn")
+            {
+                item.onClick.RemoveAllListeners();
+                item.onClick.AddListener(LobbyScene);
+                Debug.Log($"'{item.name}' 버튼에 LobbyScene 연결됨");
             }
         }
 
