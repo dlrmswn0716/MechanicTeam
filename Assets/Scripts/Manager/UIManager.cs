@@ -95,7 +95,7 @@ public class UIManager : MonoBehaviour
         clear.SetActive(true);
         //TO-DO : 추후에 스크립터블 오브젝트를 사용해서 조건 확인
         int checkCnt = 1;
-        if (_time <= 1.0f)
+        if (_time <= 180.0f)
             checkCnt++;
         //TO - DO : 털뭉치 획득 여부 확인
         if (isAchieve)
