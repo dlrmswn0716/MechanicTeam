@@ -25,13 +25,19 @@ public class MomCat : MonoBehaviour
     private bool canInteracting = false;
     public GameObject interactObject = null;
 
+    private bool isFirstMouseClicked = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
 
+        xRotation = 0f;
+        playerCamera.localRotation = Quaternion.Euler(0f, 0f, 0f);
+
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
     }
 
     // Update is called once per frame
@@ -40,11 +46,12 @@ public class MomCat : MonoBehaviour
         HandleMove();
         HandleJump();
         HandleInteract();
+        HandleMouseLook();
+        HandleMouseClick();
     }
 
     private void LateUpdate()
     {
-        HandleMouseLook();
     }
 
     void HandleMove()
@@ -77,6 +84,9 @@ public class MomCat : MonoBehaviour
 
     void HandleMouseLook()
     {
+        if (isFirstMouseClicked == false)
+            return;
+
         float mouseX = Input.GetAxis("Mouse X") * mouseMovementSpeedX * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseMovementSpeedY * Time.deltaTime;
 
@@ -108,7 +118,7 @@ public class MomCat : MonoBehaviour
             HandleMove();
         }
 
-        if (collision.gameObject.name == "Fish" && isInteracting == false)
+        if (collision.gameObject.name.Contains("Fish") && isInteracting == false)
         {
             interactObject = collision.gameObject;
             canInteracting = true;
@@ -133,6 +143,12 @@ public class MomCat : MonoBehaviour
         Interact();
     }
 
+    void HandleMouseClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+            isFirstMouseClicked = true;
+    }
+
     void SetLegMovement(bool isActive)
     {
         isPrevMove = isMove;
@@ -147,32 +163,35 @@ public class MomCat : MonoBehaviour
         if (canInteracting == false)
             return;
 
-        if (isInteracting == false)
+        if (interactObject.name.Contains("Fish"))
         {
-            isInteracting = true;
-            // 물기
-            Transform attachPoint = transform.Find("FishOffset");
-            interactObject.transform.SetParent(attachPoint);
+            if (isInteracting == false)
+            {
+                isInteracting = true;
+                // 물기
+                Transform attachPoint = transform.Find("FishOffset");
+                interactObject.transform.SetParent(attachPoint);
 
-            Rigidbody interactRb = interactObject.GetComponent<Rigidbody>();
-            interactRb.isKinematic = true;
+                Rigidbody interactRb = interactObject.GetComponent<Rigidbody>();
+                interactRb.isKinematic = true;
 
-            BoxCollider interactBC = interactObject.GetComponent<BoxCollider>();
-            interactBC.isTrigger = true;
+                BoxCollider interactBC = interactObject.GetComponent<BoxCollider>();
+                interactBC.isTrigger = true;
 
-            Debug.Log("Enter");
-        }
-        else
-        {
-            isInteracting = false;
-            // 놓아주기
-            interactObject.transform.SetParent(null);
+                Debug.Log("Enter");
+            }
+            else
+            {
+                isInteracting = false;
+                // 놓아주기
+                interactObject.transform.SetParent(null);
 
-            Rigidbody interactRb = interactObject.GetComponent<Rigidbody>();
-            interactRb.isKinematic = false;
+                Rigidbody interactRb = interactObject.GetComponent<Rigidbody>();
+                interactRb.isKinematic = false;
 
-            BoxCollider interactBC = interactObject.GetComponent<BoxCollider>();
-            interactBC.isTrigger = false;
+                BoxCollider interactBC = interactObject.GetComponent<BoxCollider>();
+                interactBC.isTrigger = false;
+            }
         }
     }
 }
