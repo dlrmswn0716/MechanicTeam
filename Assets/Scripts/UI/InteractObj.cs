@@ -41,7 +41,7 @@ public class InteractObj : MonoBehaviour
         else if (other.tag == "Player" && !GameManager.instance.PC.canInteracting)
         {
             isShowUI = true;
-            testUI.transform.position = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
+            testUI.transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
             trn = other.transform;
             testUI.SetActive(true);
         }
