@@ -53,19 +53,23 @@ public class InteractObj : MonoBehaviour
     {
         if (ItemType != e_ItemType.Goal)
             return;
-        if (other.gameObject.GetComponent<chaseFish>() != null)
-            return;
         // Physics.OverlapBox로 한 번에 체크
         Collider[] colliders = Physics.OverlapBox(transform.position,GetComponent<BoxCollider>().size / 2);
 
-        int hasPlayer = 0;
-
+        bool hasPlayer = false;
+        bool hasMini = false;
         foreach (Collider col in colliders)
         {
-            if (col.CompareTag("Player")) hasPlayer ++;
+            if (col.CompareTag("Player"))
+            {
+                if (col.gameObject.GetComponent<chaseFish>() != null)
+                    hasMini = true;
+                if(col.gameObject.GetComponent<MomCat>() != null)
+                    hasPlayer = true;
+            }
         }
 
-        if (hasPlayer>=2)
+        if (hasPlayer&&hasMini)
         {
             Debug.Log(" 골!");
             UIManager.Instance.ClearUI();
@@ -76,11 +80,20 @@ public class InteractObj : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.GetComponent<chaseFish>() != null)
+        {
             return;
+        }
+
         if (other.tag == "Player" && ItemType == e_ItemType.Fish)
         {
-            isShowUI = false;
-            testUI.SetActive(false);
+            HideUI();
         }
+    }
+
+    public void HideUI()
+    {
+        isShowUI = false;
+        testUI.SetActive(false);
+
     }
 }

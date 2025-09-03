@@ -19,9 +19,9 @@ public class GameManager : MonoBehaviour
 
     }
     
-    public void Init()
+    public void Init(GameObject PlayerObj)
     {
-        PC = GameObject.FindGameObjectWithTag("Player").GetComponent<MomCat>();
+        PC = PlayerObj.GetComponent<MomCat>();
         Achievement = false;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
