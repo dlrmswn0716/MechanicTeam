@@ -10,8 +10,13 @@ public class MomCat : MonoBehaviour
     public float mouseMovementSpeedX = 250f;
     public float mouseMovementSpeedY = 250f;
     public Transform playerCamera;
+    private Transform playerCameraPivot;
+    private Transform catBody;
     public float mouseXRotationLimit = 50f;
     private float xRotation = -50f;
+    public float mouseXRotationMinLimit = -80f;
+    public float mouseXRotationMaxLimit = 20f;
+    private float cameraPivotBaseRotationY = -180.0f;
 
     public float jumpForce = 5f;
     private bool isGrounded = true;
@@ -25,6 +30,7 @@ public class MomCat : MonoBehaviour
     public GameObject interactObject = null;
 
     private bool isFirstMouseClicked = false;
+    private bool isAltActive = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,9 +39,12 @@ public class MomCat : MonoBehaviour
         GameManager.instance.Init();
 
         rb = GetComponent<Rigidbody>();
+        playerCameraPivot = transform.Find("CameraPivot");
+        catBody = transform.Find("Body");
 
         xRotation = 0f;
-        playerCamera.localRotation = Quaternion.Euler(0f, 0f, 0f);
+        playerCamera.localRotation = Quaternion.Euler(0f, 180f, 0f);
+        playerCamera.localPosition = new Vector3(0, 0, 5);
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -58,11 +67,11 @@ public class MomCat : MonoBehaviour
         float moveX = move.x;
         float moveZ = move.y;
 
-        Vector3 forward = playerCamera.forward;
+        Vector3 forward = catBody.up;
         forward.y = 0;
         forward.Normalize();
 
-        Vector3 right = playerCamera.right;
+        Vector3 right = catBody.forward;
         right.y = 0;
         right.Normalize();
 
@@ -93,12 +102,31 @@ public class MomCat : MonoBehaviour
         float mouseX = mouse.x * mouseMovementSpeedX * Time.deltaTime;
         float mouseY = mouse.y * mouseMovementSpeedY * Time.deltaTime;
 
-        transform.Rotate(Vector3.up * mouseX);
+        // 카메라와 고양이 캐릭터가 같이 회전
+        if (InputManager.instance.GetAltInput() == false)
+        {
+            // 좌우로 회전한 카메라 원상복구
+            if(isAltActive == true)
+            {
+                
+                playerCameraPivot.localRotation = Quaternion.Euler(playerCameraPivot.localRotation.x, cameraPivotBaseRotationY, playerCameraPivot.localRotation.z);
+                isAltActive = false;
+            }
 
+            transform.Rotate(Vector3.up * mouseX);
+        }
+        // 카메라만 좌우회전
+        else
+        {
+            isAltActive = true;
+            float yRotation = playerCameraPivot.eulerAngles.y - mouseX;
+            playerCameraPivot.rotation = Quaternion.Euler(playerCameraPivot.eulerAngles.x, yRotation, playerCameraPivot.eulerAngles.z);
+        }    
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -mouseXRotationLimit, mouseXRotationLimit);
+        xRotation = Mathf.Clamp(xRotation, mouseXRotationMinLimit, mouseXRotationMaxLimit);
 
-        playerCamera.rotation = Quaternion.Euler(xRotation, playerCamera.eulerAngles.y, playerCamera.eulerAngles.z);
+        playerCameraPivot.rotation = Quaternion.Euler(xRotation, playerCameraPivot.eulerAngles.y, playerCameraPivot.eulerAngles.z);
+        //playerCamera.rotation = Quaternion.Euler(xRotation, playerCamera.eulerAngles.y, playerCamera.eulerAngles.z);
     }
 
     void HandleJump()
@@ -189,8 +217,9 @@ public class MomCat : MonoBehaviour
                 interactBC.isTrigger = true;
 
                 interactObject.transform.position = attachPoint.position;
+                interactObject.gameObject.tag = "Catch";
 
-                Debug.Log("Enter");
+                Debug.Log(interactObject.gameObject.tag);
             }
             else
             {
@@ -203,6 +232,9 @@ public class MomCat : MonoBehaviour
 
                 BoxCollider interactBC = interactObject.GetComponent<BoxCollider>();
                 interactBC.isTrigger = false;
+
+                interactObject.gameObject.tag = "Fish";
+                Debug.Log(interactObject.gameObject.tag);
             }
         }
     }

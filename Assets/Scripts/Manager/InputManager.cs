@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
@@ -17,7 +17,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    // ÀÌµ¿ ÀÔ·Â
+    // ì´ë™ ì…ë ¥
     public Vector2 GetMoveInput()
     {
         float moveX = Input.GetAxisRaw("Horizontal");
@@ -25,7 +25,7 @@ public class InputManager : MonoBehaviour
         return new Vector2(moveX, moveZ);
     }
 
-    // ¸¶¿ì½º ÀÔ·Â
+    // ë§ˆìš°ìŠ¤ ì…ë ¥
     public Vector2 GetMouseInput()
     {
         float mouseX = Input.GetAxis("Mouse X");
@@ -33,21 +33,26 @@ public class InputManager : MonoBehaviour
         return new Vector2(mouseX, mouseY);
     }
 
-    // Á¡ÇÁ ÀÔ·Â
+    // ì í”„ ì…ë ¥
     public bool GetJumpInput()
     {
         return Input.GetKeyDown(KeyCode.Space);
     }
 
-    // »óÈ£ÀÛ¿ë ÀÔ·Â
+    // ìƒí˜¸ì‘ìš© ì…ë ¥
     public bool GetInteractInput()
     {
         return Input.GetKeyDown(KeyCode.E);
     }
 
-    // ¸¶¿ì½º Å¬¸¯ (¿ŞÂÊ ¹öÆ°)
+    // ë§ˆìš°ìŠ¤ í´ë¦­ (ì™¼ìª½ ë²„íŠ¼)
     public bool GetMouseClick()
     {
         return Input.GetMouseButtonDown(0);
+    }
+
+    public bool GetAltInput()
+    {
+        return Input.GetKey(KeyCode.LeftAlt);
     }
 }

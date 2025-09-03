@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class MomCatLegMove : MonoBehaviour
 {
-    public float legsRotationUpLimit = 203.0f;
-    public float legsRotationDownLimit = 164.0f;
-    public float legsSpeed = 120.0f;
+    public float legsRotationUpLimit = 223.0f;
+    public float legsRotationDownLimit = 144.0f;
+    public float legsSpeed = 240.0f;
     public bool isActive = false;
 
     private bool isAdd = true;
