@@ -180,24 +180,26 @@ public class MomCat : MonoBehaviour
         if (other.gameObject.CompareTag("Achievement"))
             GameManager.instance.Achievement = true;
 
-        if (other.gameObject.name.Contains("Fish") && isInteracting == false)
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Fish") && isInteracting == false)
+        {
+            interactObject = null;
+            canInteracting = false;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("Fish") && isInteracting == false)
         {
             if (interactObject != null)
                 return;
 
             interactObject = other.gameObject;
             canInteracting = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.name.Contains("Fish") && isInteracting == false)
-        {
-            FindAnotherFish();
-
-            if(interactObject == null)
-                canInteracting = false;
         }
     }
 
@@ -316,33 +318,5 @@ public class MomCat : MonoBehaviour
             // [디버그 5] 레이캐스트가 아무것에도 부딪히지 않았을 때 로그 출력
             // Debug.Log("레이캐스트가 아무것에도 충돌하지 않음.");
         }
-    }
-
-    void FindAnotherFish()
-    {
-        // BoxCollider의 중심과 크기 가져오기
-        Vector3 center = boxCollider.bounds.center;
-        Vector3 halfExtents = boxCollider.bounds.extents;
-
-        // 현재 박스 범위 안에 들어온 모든 Collider 가져오기
-        Collider[] colliders = Physics.OverlapBox(center, halfExtents, transform.rotation);
-
-        Collider nearFish = null;
-        float distance = 10000.0f;
-        foreach (Collider col in colliders)
-        {
-            if (col.gameObject.CompareTag("Fish") == false)
-                continue;
-
-            float findDistance = Vector3.Distance(center, col.gameObject.transform.position);
-
-            if(findDistance < distance)
-            {
-                nearFish = col;
-                distance = findDistance;
-            }
-        }
-
-        interactObject = (nearFish == null) ? null : nearFish.gameObject;
     }
 }
