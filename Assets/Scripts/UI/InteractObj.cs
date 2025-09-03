@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InteractObj : MonoBehaviour
 {
@@ -6,6 +6,7 @@ public class InteractObj : MonoBehaviour
     public GameObject testUI;
     private Transform trn;
     public e_ItemType ItemType;
+
     
     public enum e_ItemType
     {
@@ -29,24 +30,49 @@ public class InteractObj : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(ItemType == e_ItemType.Achievement && other.CompareTag("Player"))
+        if (ItemType == e_ItemType.Achievement && other.CompareTag("Player"))
         {
             GameManager.instance.Achievement = true;
             UIManager.Instance.GetAchieve();
             Destroy(gameObject);
         }
-        else if(other.tag=="Player"&&!GameManager.instance.PC.canInteracting)
+        else if (ItemType != e_ItemType.Fish)
+            return;
+        else if (other.tag == "Player" && !GameManager.instance.PC.canInteracting)
         {
             isShowUI = true;
-            testUI.transform.position = new Vector3(transform.position.x,transform.position.y+2f,transform.position.z);
+            testUI.transform.position = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
             trn = other.transform;
             testUI.SetActive(true);
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (ItemType != e_ItemType.Goal)
+            return;
+        // Physics.OverlapBox로 한 번에 체크
+        Collider[] colliders = Physics.OverlapBox(transform.position,GetComponent<BoxCollider>().size / 2);
+
+        bool hasPlayer = false;
+        bool hasMini = false;
+
+        foreach (Collider col in colliders)
+        {
+            if (col.CompareTag("Player")) hasPlayer = true;
+            if (col.CompareTag("Mini")) hasMini = true;
+        }
+
+        if (hasPlayer && hasMini)
+        {
+            Debug.Log(" 골!");
+            UIManager.Instance.ClearUI();
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && ItemType == e_ItemType.Fish)
         {
             isShowUI = false;
             testUI.SetActive(false);

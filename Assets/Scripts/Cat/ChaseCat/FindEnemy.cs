@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class FindEnemy : MonoBehaviour
 {
+    public Vector3 endPos;
     // 원뿔 거리
     [SerializeField] private float detectionDistance = 10f;
     //플레이어 태그를 찾음
@@ -14,24 +17,49 @@ public class FindEnemy : MonoBehaviour
     [SerializeField] private float forwardAngle = 15f;
     [SerializeField] private bool showArea = false;
 
+    public float duration = 0.25f;
+    private Vector3 startPos;
+
     private List<Transform> detectedPlayers = new List<Transform>();
     private Coroutine detectionCoroutine;
+    private GameObject Spot;
 
     //코루틴 순환
     void Start()
     {
+        startPos = gameObject.transform.position;
+        endPos = startPos - new Vector3(0, -0.576f, 0);
         detectionCoroutine = StartCoroutine(DetectionLoop());
+        Spot = transform.GetChild(transform.childCount - 1).gameObject;
     }
-
+    //3초 대기 후 1초동안 수색
     IEnumerator DetectionLoop()
     {
         while (true)
         {
             yield return new WaitForSeconds(delayInterval);
+            StartCoroutine(ChaseCatAnim(startPos,endPos));
             DetectAllObjectsInTriangle();
             showArea = true;
+            Spot.SetActive(true);
             yield return new WaitForSeconds(rayInterval);
+            StartCoroutine(ChaseCatAnim(endPos, startPos));
             showArea = false;
+            Spot.SetActive(false);
+        }
+    }
+
+    IEnumerator ChaseCatAnim(Vector3 startPos,Vector3 endPos)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration; // 0~1 비율
+
+            transform.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null; // 한 프레임 대기
         }
     }
 

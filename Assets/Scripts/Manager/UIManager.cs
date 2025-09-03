@@ -38,6 +38,8 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (time == null)
+            return;
         if(!timeOff)
             timeCalc();
 
@@ -61,6 +63,7 @@ public class UIManager : MonoBehaviour
     // 클리어 UI SHOW
     public void ClearUI()
     {
+        timeOff = true;
         clear.SetActive(true);
         //TO-DO : 추후에 스크립터블 오브젝트를 사용해서 조건 확인
         int checkCnt = 1;
@@ -80,6 +83,7 @@ public class UIManager : MonoBehaviour
     // 게임오버 UI SHOW
     public void OverUI()
     {
+        timeOff = true;
         over.SetActive(true);
     }
 }
