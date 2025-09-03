@@ -391,6 +391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PC: {fileID: 0}
+  Achievement: 0
 --- !u!4 &614294548
 Transform:
   m_ObjectHideFlags: 0
@@ -872,6 +873,7 @@ GameObject:
   - component: {fileID: 1897666148}
   - component: {fileID: 1897666147}
   - component: {fileID: 1897666146}
+  - component: {fileID: 1897666150}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -963,6 +965,27 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1897666150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897666145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56943d36cb046d048a1f49b2cf8207fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: {fileID: 0}
+  clear: {fileID: 0}
+  over: {fileID: 0}
+  playerName: 
+  interactionIcon: {fileID: 0}
+  AchieveObj: {fileID: 0}
+  InteractUI: {fileID: 0}
+  testObj: {fileID: 0}
+  isInter: 0
 --- !u!1 &2039760887
 GameObject:
   m_ObjectHideFlags: 0

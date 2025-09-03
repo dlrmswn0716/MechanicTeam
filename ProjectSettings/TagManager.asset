@@ -8,6 +8,7 @@ TagManager:
   - Achievement
   - Catch
   - Ground
+  - Mini
   layers:
   - Default
   - TransparentFX

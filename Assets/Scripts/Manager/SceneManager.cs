@@ -66,18 +66,18 @@ public class SceneManager : MonoBehaviour
     void ConnectSceneButtons()
     {
         // "NextButton" 이름의 버튼 찾기
-        GameObject buttonObj = GameObject.Find("StartBtn");
-        if (buttonObj != null)
+        Button[] children = UIManager.Instance.gameObject.GetComponentsInChildren<Button>();
+        foreach(var item in children)
         {
-            Button button = buttonObj.GetComponent<Button>();
-            if (button != null)
+            if (item.name == "StartBtn")
             {
-                button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(NextScene);
-                Debug.Log($"'{buttonObj.name}' 버튼에 NextScene 연결됨");
+                item.onClick.RemoveAllListeners();
+                item.onClick.AddListener(NextScene);
+                Debug.Log($"'{item.name}' 버튼에 NextScene 연결됨");
                 return;
             }
         }
         Debug.Log("버튼을 찾을 수 없습니다 : StartBtn");
+
     }
 }

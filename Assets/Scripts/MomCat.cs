@@ -32,6 +32,7 @@ public class MomCat : MonoBehaviour
     private bool isFirstMouseClicked = false;
     private bool isAltActive = false;
 
+    public GameObject MiniCat;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -46,8 +47,9 @@ public class MomCat : MonoBehaviour
         playerCamera.localRotation = Quaternion.Euler(0f, 180f, 0f);
         playerCamera.localPosition = new Vector3(0, 0, 5);
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //TO-DO : UI 클릭을 위한 임시 주석
+/*        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;*/
 
     }
 
@@ -170,6 +172,7 @@ public class MomCat : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Achievement"))
             GameManager.instance.Achievement = true;
+        
     }
 
     void HandleInteract()
