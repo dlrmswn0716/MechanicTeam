@@ -13,6 +13,7 @@ public class FindEnemy : MonoBehaviour
     [SerializeField] private bool showArea = false;
 
     public float duration = 0.25f;
+    public GameObject overUIModel;
     private Vector3 startPos;
 
     private List<Transform> detectedPlayers = new List<Transform>();
@@ -90,6 +91,8 @@ public class FindEnemy : MonoBehaviour
                 if (HasClearLineOfSight(collider.transform.position))
                 {
                     detectedPlayers.Add(collider.transform);
+                    UIManager.Instance.OverModel = overUIModel;
+                    UIManager.Instance.OverUI();
                     Debug.Log($"플레이어 발견: {collider.transform.name}");
                 }
             }
