@@ -30,6 +30,8 @@ public class InteractObj : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.GetComponent<chaseFish>() != null)
+            return;
         if (ItemType == e_ItemType.Achievement && other.CompareTag("Player"))
         {
             GameManager.instance.Achievement = true;
@@ -41,7 +43,7 @@ public class InteractObj : MonoBehaviour
         else if (other.tag == "Player" && !GameManager.instance.PC.canInteracting)
         {
             isShowUI = true;
-            testUI.transform.position = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
+            testUI.transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
             trn = other.transform;
             testUI.SetActive(true);
         }
@@ -50,6 +52,8 @@ public class InteractObj : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if (ItemType != e_ItemType.Goal)
+            return;
+        if (other.gameObject.GetComponent<chaseFish>() != null)
             return;
         // Physics.OverlapBox로 한 번에 체크
         Collider[] colliders = Physics.OverlapBox(transform.position,GetComponent<BoxCollider>().size / 2);
@@ -65,11 +69,14 @@ public class InteractObj : MonoBehaviour
         {
             Debug.Log(" 골!");
             UIManager.Instance.ClearUI();
+            Time.timeScale = 0f;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.gameObject.GetComponent<chaseFish>() != null)
+            return;
         if (other.tag == "Player" && ItemType == e_ItemType.Fish)
         {
             isShowUI = false;
