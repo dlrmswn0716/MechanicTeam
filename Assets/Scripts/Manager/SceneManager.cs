@@ -66,7 +66,7 @@ public class SceneManager : MonoBehaviour
     void ConnectSceneButtons()
     {
         // "NextButton" 이름의 버튼 찾기
-        Button[] children = UIManager.Instance.gameObject.GetComponentsInChildren<Button>();
+        Button[] children = UIManager.Instance.gameObject.GetComponentsInChildren<Button>(true);
         foreach(var item in children)
         {
             if (item.name == "StartBtn")
