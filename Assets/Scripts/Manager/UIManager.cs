@@ -125,7 +125,7 @@ public class UIManager : MonoBehaviour
     }
     IEnumerator OverCor()
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.7f);
         if (Fade != null)
             Fade.SetActive(true);
         MouseLock(false);

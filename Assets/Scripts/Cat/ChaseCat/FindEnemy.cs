@@ -15,6 +15,7 @@ public class FindEnemy : MonoBehaviour
     public float duration = 0.25f;
     public GameObject overUIModel;
     private Vector3 startPos;
+    private bool isTarget = false;
 
     private List<Transform> detectedPlayers = new List<Transform>();
     private Coroutine detectionCoroutine;
@@ -90,7 +91,11 @@ public class FindEnemy : MonoBehaviour
             {
                 if (HasClearLineOfSight(collider.transform.position))
                 {
+                    if (isTarget)
+                        return;
+                    isTarget = true;
                     detectedPlayers.Add(collider.transform);
+                    overUIModel.SetActive(true);
                     UIManager.Instance.OverModel = overUIModel;
                     UIManager.Instance.OverUI();
                     Debug.Log($"플레이어 발견: {collider.transform.name}");
