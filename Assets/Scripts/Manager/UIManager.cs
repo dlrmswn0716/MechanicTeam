@@ -4,6 +4,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
@@ -127,5 +131,14 @@ public class UIManager : MonoBehaviour
         MouseLock(false);
         timeOff = true;
         over.SetActive(true);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+
+#if UNITY_EDITOR
+        EditorApplication.isPlaying = false;
+#endif
     }
 }
