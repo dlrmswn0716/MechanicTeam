@@ -36,6 +36,12 @@ public class MomCat : MonoBehaviour
     public GameObject MiniCat;
     public LayerMask groundLayer;         // 바닥 레이어 지정
 
+    [Header("Ground Check Settings")]
+    [Tooltip("캐릭터의 피봇 위치에서 얼마나 높은 곳에서 땅을 향해 Raycast를 쏠지 결정합니다.")]
+    [SerializeField] private float groundCheckYOffset = 0.5f;
+    [Tooltip("땅을 감지할 Raycast의 최대 거리입니다.")]
+    [SerializeField] private float groundCheckDistance = 1f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -65,7 +71,7 @@ public class MomCat : MonoBehaviour
         HandleInteract();
         HandleMouseLook();
         HandleMouseClick();
-        // StickToGround();
+        StickToGround();
     }
 
     void HandleMove()
@@ -255,16 +261,45 @@ public class MomCat : MonoBehaviour
 
     void StickToGround()
     {
-        Debug.Log("StickTo");
-        Ray ray = new Ray(transform.position, Vector3.down);
-        Debug.DrawRay(ray.origin, ray.direction * 2f, Color.red);
-        if (Physics.Raycast(ray, out RaycastHit hit, 2f))
-        {
-            Debug.Log("True");
+        // 캐릭터의 위치에서 아래 방향으로 Ray를 쏠 시작점과 방향 정의
+        // 인스펙터에서 설정한 groundCheckYOffset 값을 사용하도록 수정
+        Vector3 rayOrigin = transform.position + Vector3.up * groundCheckYOffset;
+        Vector3 rayDirection = Vector3.down;
 
-            // 경사에 맞춰 회전 (앞 방향 유지)
-            Quaternion slopeRot = Quaternion.FromToRotation(Vector3.up, hit.normal);
-            catMain.transform.rotation = Quaternion.Slerp(catMain.transform.rotation, slopeRot, 5f * Time.deltaTime);
+        // 인스펙터에서 설정한 groundCheckDistance 값을 사용하도록 수정
+        float rayDistance = groundCheckDistance;
+
+        // [디버그 1] 레이캐스트 광선을 Scene 뷰에 빨간색 선으로 표시
+        Debug.DrawRay(rayOrigin, rayDirection * rayDistance, Color.red);
+
+        // Raycast가 바닥에 부딪혔는지 확인
+        if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, rayDistance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+        {
+            // [디버그 2] Raycast가 무언가에 부딪혔을 때 콘솔에 로그 출력
+            // Debug.Log("레이캐스트 충돌! 충돌한 오브젝트: " + hit.transform.name);
+
+            // 만약 Ray가 자기 자신에게 부딪혔다면 함수를 그냥 종료한다.
+            if (hit.transform == this.transform)
+            {
+                return;
+            }
+
+            // [디버그 3] 부딪힌 지점에서 표면의 법선 벡터(Normal)를 파란색 선으로 표시
+            Debug.DrawRay(hit.point, hit.normal, Color.blue);
+
+            // [디버그 4] 법선 벡터 값을 콘솔에 출력
+            // Debug.Log("경사각도(Normal): " + hit.normal);
+
+
+            // --- 기존 회전 로직 ---
+            Quaternion slopeRotation = Quaternion.FromToRotation(transform.up, hit.normal);
+            Quaternion targetRotation = slopeRotation * transform.rotation;
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
+        }
+        else
+        {
+            // [디버그 5] 레이캐스트가 아무것에도 부딪히지 않았을 때 로그 출력
+            // Debug.Log("레이캐스트가 아무것에도 충돌하지 않음.");
         }
     }
 }
