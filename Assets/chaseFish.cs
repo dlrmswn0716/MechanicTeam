@@ -12,7 +12,9 @@ public class chaseFish : MonoBehaviour
     private float timer = 0f;
     public float moveSpeed = 5f; // 이동 속도
 
+
     public LayerMask groundLayer;         // 바닥 레이어 지정
+    public LayerMask obstacleLayer;     // 장애물 레이어 지정 
     void Update()
     {
         timer += Time.deltaTime;
@@ -62,7 +64,7 @@ public class chaseFish : MonoBehaviour
         foreach (GameObject fish in fishes)
         {
             float dist = Vector3.Distance(currentPos, fish.transform.position);
-            if (dist < minDist && dist <= chaseDistance)
+            if (dist < minDist && dist <= chaseDistance && HasClearLineOfSight(fish))
             {
                 minDist = dist;
                 nearest = fish;
@@ -71,6 +73,21 @@ public class chaseFish : MonoBehaviour
         return nearest;
     }
 
+    bool HasClearLineOfSight(GameObject target)
+    {
+        Vector3 origin = transform.position + Vector3.up * 0.5f; // 고양이 눈높이 정도
+        Vector3 dir = (target.transform.position - origin).normalized;
+        float dist = Vector3.Distance(origin, target.transform.position);
+
+        // 장애물 체크 (Fish는 무시)
+        if (Physics.Raycast(origin, dir, out RaycastHit hit, dist, obstacleLayer))
+        {
+            // 맞은 게 Fish면 시야 확보, 아니면 막힘
+            if (!hit.collider.CompareTag(fishTag))
+                return false;
+        }
+        return true;
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag(fishTag))
