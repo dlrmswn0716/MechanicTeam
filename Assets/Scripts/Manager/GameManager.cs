@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public MomCat PC;
+    public bool Achievement = false;
     private void Awake()
     {
         if(instance == null)
@@ -20,8 +21,8 @@ public class GameManager : MonoBehaviour
     
     public void Init()
     {
-
         PC = GameObject.FindGameObjectWithTag("Player").GetComponent<MomCat>();
+        Achievement = false;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
