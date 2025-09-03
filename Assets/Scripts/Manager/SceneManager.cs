@@ -12,8 +12,7 @@ public class SceneManager : MonoBehaviour
     {
         Lobby,
         Stage1,
-        Stage2,
-        Stage3
+        Stage2
     } 
     private void Awake()
     {
@@ -34,6 +33,12 @@ public class SceneManager : MonoBehaviour
         _sceneType += 1;
         if ((int)_sceneType > lastScene)
             _sceneType = SceneType.Lobby;
+        string sceneName = _sceneType.ToString();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    }
+
+    public void ReLoadScene()
+    {
         string sceneName = _sceneType.ToString();
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
     }
