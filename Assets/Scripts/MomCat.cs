@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
+using System.Runtime.InteropServices;
 
 
 public class MomCat : MonoBehaviour
@@ -27,6 +28,12 @@ public class MomCat : MonoBehaviour
 
     private bool isFirstMouseClicked = false;
 
+    [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+    public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
+
+    private const int MOUSEEVENTF_LEFTDOWN = 0x02;
+    private const int MOUSEEVENTF_LEFTUP = 0x04;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -50,14 +57,11 @@ public class MomCat : MonoBehaviour
         HandleMouseClick();
     }
 
-    private void LateUpdate()
-    {
-    }
-
     void HandleMove()
     {
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveZ = Input.GetAxisRaw("Vertical");
+        Vector2 move = InputManager.instance.GetMoveInput();
+        float moveX = move.x;
+        float moveZ = move.y;
 
         Vector3 forward = playerCamera.forward;
         forward.y = 0;
@@ -85,10 +89,16 @@ public class MomCat : MonoBehaviour
     void HandleMouseLook()
     {
         if (isFirstMouseClicked == false)
+        {
+            isFirstMouseClicked = true;
+            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
             return;
+        }
 
-        float mouseX = Input.GetAxis("Mouse X") * mouseMovementSpeedX * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseMovementSpeedY * Time.deltaTime;
+        Vector2 mouse = InputManager.instance.GetMouseInput();
+        float mouseX = mouse.x * mouseMovementSpeedX * Time.deltaTime;
+        float mouseY = mouse.y * mouseMovementSpeedY * Time.deltaTime;
 
         transform.Rotate(Vector3.up * mouseX);
 
@@ -100,7 +110,8 @@ public class MomCat : MonoBehaviour
 
     void HandleJump()
     {
-        if ((Input.GetKeyDown(KeyCode.Space) && isGrounded == true) == false)
+        bool isJumpInput = InputManager.instance.GetJumpInput();
+        if ((isJumpInput && isGrounded) == false)
             return;
 
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -127,7 +138,7 @@ public class MomCat : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.name == "Fish" && isInteracting == false)
+        if (collision.gameObject.name.Contains("Fish") && isInteracting == false)
         {
             interactObject = null;
             canInteracting = false;
@@ -136,7 +147,7 @@ public class MomCat : MonoBehaviour
 
     void HandleInteract()
     {
-        if (Input.GetKeyDown(KeyCode.E) == false)
+        if (InputManager.instance.GetInteractInput() == false)
             return;
 
         // TODO : Interact Object
@@ -145,7 +156,7 @@ public class MomCat : MonoBehaviour
 
     void HandleMouseClick()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (InputManager.instance.GetMouseClick())
             isFirstMouseClicked = true;
     }
 
@@ -177,6 +188,8 @@ public class MomCat : MonoBehaviour
 
                 BoxCollider interactBC = interactObject.GetComponent<BoxCollider>();
                 interactBC.isTrigger = true;
+
+                interactObject.transform.position = attachPoint.position;
 
                 Debug.Log("Enter");
             }
