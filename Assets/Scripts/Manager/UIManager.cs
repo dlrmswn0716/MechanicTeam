@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,9 +16,11 @@ public class UIManager : MonoBehaviour
     public GameObject AchieveObj;
 
     public GameObject InteractUI;
+    public GameObject OverModel;
 
     public  GameObject testObj;
     public bool isInter = false;
+    public GameObject Fade;
 
     private bool timeOff = false;
     private float _time = 0.0f;
@@ -104,6 +107,23 @@ public class UIManager : MonoBehaviour
     // 게임오버 UI SHOW
     public void OverUI()
     {
+        if(OverModel!= null)
+        {
+            StartCoroutine(OverCor());
+        }
+        else
+        {
+            MouseLock(false);
+            timeOff = true;
+            over.SetActive(true);
+        }
+
+    }
+    IEnumerator OverCor()
+    {
+        yield return new WaitForSeconds(0.3f);
+        if (Fade != null)
+            Fade.SetActive(true);
         MouseLock(false);
         timeOff = true;
         over.SetActive(true);
