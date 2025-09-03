@@ -54,16 +54,14 @@ public class InteractObj : MonoBehaviour
         // Physics.OverlapBox로 한 번에 체크
         Collider[] colliders = Physics.OverlapBox(transform.position,GetComponent<BoxCollider>().size / 2);
 
-        bool hasPlayer = false;
-        bool hasMini = false;
+        int hasPlayer = 0;
 
         foreach (Collider col in colliders)
         {
-            if (col.CompareTag("Player")) hasPlayer = true;
-            if (col.CompareTag("Mini")) hasMini = true;
+            if (col.CompareTag("Player")) hasPlayer ++;
         }
 
-        if (hasPlayer && hasMini)
+        if (hasPlayer>=2)
         {
             Debug.Log(" 골!");
             UIManager.Instance.ClearUI();
