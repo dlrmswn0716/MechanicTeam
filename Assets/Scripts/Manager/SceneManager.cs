@@ -28,6 +28,7 @@ public class SceneManager : MonoBehaviour
 
     public void NextScene()
     {
+        Time.timeScale = 1f;
         // 마지막 씬
         int lastScene = System.Enum.GetValues(typeof(SceneType)).Cast<int>().Max();
         _sceneType += 1;
@@ -39,6 +40,15 @@ public class SceneManager : MonoBehaviour
 
     public void ReLoadScene()
     {
+        Time.timeScale = 1f;
+        string sceneName = _sceneType.ToString();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    }
+
+    public void LobbyScene()
+    {
+        Time.timeScale = 1f;
+        _sceneType = SceneType.Lobby;
         string sceneName = _sceneType.ToString();
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
     }
@@ -79,10 +89,20 @@ public class SceneManager : MonoBehaviour
                 item.onClick.RemoveAllListeners();
                 item.onClick.AddListener(NextScene);
                 Debug.Log($"'{item.name}' 버튼에 NextScene 연결됨");
-                return;
+            }
+            else if(item.name== "ReStartBtn")
+            {
+                item.onClick.RemoveAllListeners();
+                item.onClick.AddListener(ReLoadScene);
+                Debug.Log($"'{item.name}' 버튼에 ReloadScene 연결됨");
+            }
+            else if(item.name == "LobbyBtn")
+            {
+                item.onClick.RemoveAllListeners();
+                item.onClick.AddListener(LobbyScene);
+                Debug.Log($"'{item.name}' 버튼에 LobbyScene 연결됨");
             }
         }
-        Debug.Log("버튼을 찾을 수 없습니다 : StartBtn");
 
     }
 }

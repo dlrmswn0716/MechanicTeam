@@ -93,7 +93,7 @@ public class UIManager : MonoBehaviour
         //TO - DO : 털뭉치 획득 여부 확인
         if (isAchieve)
             checkCnt++;
-        Image[] images = clear.transform.GetChild(0).GetComponentsInChildren<Image>();
+        Image[] images = clear.transform.GetChild(1).GetComponentsInChildren<Image>();
         for(int i = 0; i < checkCnt; i++)
         {
             images[i].color = Color.yellow;

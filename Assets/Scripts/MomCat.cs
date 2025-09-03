@@ -1,5 +1,6 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
 public class MomCat : MonoBehaviour
@@ -36,6 +37,8 @@ public class MomCat : MonoBehaviour
     public GameObject MiniCat;
     public LayerMask groundLayer;         // 바닥 레이어 지정
 
+    private BoxCollider boxCollider;
+
     [Header("Ground Check Settings")]
     [Tooltip("캐릭터의 피봇 위치에서 얼마나 높은 곳에서 땅을 향해 Raycast를 쏠지 결정합니다.")]
     [SerializeField] private float groundCheckYOffset = 0.5f;
@@ -46,7 +49,7 @@ public class MomCat : MonoBehaviour
     void Start()
     {
         //TO-DO : 임시
-        GameManager.instance.Init();
+        GameManager.instance.Init(gameObject);
 
         rb = GetComponent<Rigidbody>();
         playerCameraPivot = transform.Find("CameraPivot");
@@ -57,9 +60,11 @@ public class MomCat : MonoBehaviour
         playerCamera.localRotation = Quaternion.Euler(0f, 180f, 0f);
         playerCamera.localPosition = new Vector3(0, 0, 5);
 
+        boxCollider = GetComponent<BoxCollider>();
+
         //TO-DO : UI 클릭을 위한 임시 주석
-/*        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;*/
+        /*        Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;*/
 
     }
 
@@ -135,7 +140,7 @@ public class MomCat : MonoBehaviour
             float yRotation = playerCameraPivot.eulerAngles.y - mouseX;
             playerCameraPivot.rotation = Quaternion.Euler(playerCameraPivot.eulerAngles.x, yRotation, playerCameraPivot.eulerAngles.z);
         }    
-        xRotation -= mouseY;
+        xRotation += mouseY;
         xRotation = Mathf.Clamp(xRotation, mouseXRotationMinLimit, mouseXRotationMaxLimit);
 
         playerCameraPivot.rotation = Quaternion.Euler(xRotation, playerCameraPivot.eulerAngles.y, playerCameraPivot.eulerAngles.z);
@@ -163,27 +168,39 @@ public class MomCat : MonoBehaviour
             HandleMove();
         }
 
-        if (collision.gameObject.name.Contains("Fish") && isInteracting == false)
-        {
-            interactObject = collision.gameObject;
-            canInteracting = true;
-        }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.name.Contains("Fish") && isInteracting == false)
-        {
-            interactObject = null;
-            canInteracting = false;
-        }
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Achievement"))
             GameManager.instance.Achievement = true;
-        
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Fish") && isInteracting == false)
+        {
+            interactObject = null;
+            canInteracting = false;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("Fish") && isInteracting == false)
+        {
+            if (interactObject != null)
+                return;
+
+            interactObject = other.gameObject;
+            canInteracting = true;
+        }
     }
 
     void HandleInteract()
