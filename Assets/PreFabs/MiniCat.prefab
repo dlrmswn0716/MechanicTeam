@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4272556564860000451, guid: 32f6a89f7c99d324faf1b66fbd7ff7d5, type: 3}
       propertyPath: m_TagString
-      value: Mini
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2305370993313811341, guid: 32f6a89f7c99d324faf1b66fbd7ff7d5, type: 3}
