@@ -30,6 +30,8 @@ public class InteractObj : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.GetComponent<chaseFish>() != null)
+            return;
         if (ItemType == e_ItemType.Achievement && other.CompareTag("Player"))
         {
             GameManager.instance.Achievement = true;
@@ -51,6 +53,8 @@ public class InteractObj : MonoBehaviour
     {
         if (ItemType != e_ItemType.Goal)
             return;
+        if (other.gameObject.GetComponent<chaseFish>() != null)
+            return;
         // Physics.OverlapBox로 한 번에 체크
         Collider[] colliders = Physics.OverlapBox(transform.position,GetComponent<BoxCollider>().size / 2);
 
@@ -71,6 +75,8 @@ public class InteractObj : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.gameObject.GetComponent<chaseFish>() != null)
+            return;
         if (other.tag == "Player" && ItemType == e_ItemType.Fish)
         {
             isShowUI = false;
