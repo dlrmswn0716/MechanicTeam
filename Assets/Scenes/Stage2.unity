@@ -2452,7 +2452,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1322921964138165719, guid: f8bd807daacf4ea46b2d513f60662455, type: 3}
       propertyPath: delayInterval
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1322921964138165719, guid: f8bd807daacf4ea46b2d513f60662455, type: 3}
       propertyPath: detectionDistance
@@ -6470,7 +6470,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1322921964138165719, guid: f8bd807daacf4ea46b2d513f60662455, type: 3}
       propertyPath: delayInterval
-      value: 4.03
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1322921964138165719, guid: f8bd807daacf4ea46b2d513f60662455, type: 3}
       propertyPath: detectionDistance
@@ -7738,7 +7738,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1322921964138165719, guid: f8bd807daacf4ea46b2d513f60662455, type: 3}
       propertyPath: delayInterval
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1322921964138165719, guid: f8bd807daacf4ea46b2d513f60662455, type: 3}
       propertyPath: detectionDistance
