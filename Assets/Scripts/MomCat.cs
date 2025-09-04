@@ -244,7 +244,7 @@ public class MomCat : MonoBehaviour
             {
                 isInteracting = true;
                 // 물기
-                Transform attachPoint = transform.Find("FishOffset");
+                Transform attachPoint = transform.Find("Cat/FishOffset");
                 interactObject.transform.SetParent(attachPoint);
 
                 Rigidbody interactRb = interactObject.GetComponent<Rigidbody>();
