@@ -58,7 +58,7 @@ public class MomCat : MonoBehaviour
 
         xRotation = 0f;
         playerCamera.localRotation = Quaternion.Euler(0f, 180f, 0f);
-        playerCamera.localPosition = new Vector3(0, 0, 5);
+        playerCamera.localPosition = new Vector3(0, 0, 6);
 
         boxCollider = GetComponent<BoxCollider>();
 
@@ -280,7 +280,7 @@ public class MomCat : MonoBehaviour
     {
         // 캐릭터의 위치에서 아래 방향으로 Ray를 쏠 시작점과 방향 정의
         // 인스펙터에서 설정한 groundCheckYOffset 값을 사용하도록 수정
-        Vector3 rayOrigin = transform.position + Vector3.up * groundCheckYOffset;
+        Vector3 rayOrigin = catBody.position + Vector3.up * groundCheckYOffset;
         Vector3 rayDirection = Vector3.down;
 
         // 인스펙터에서 설정한 groundCheckDistance 값을 사용하도록 수정
@@ -309,9 +309,9 @@ public class MomCat : MonoBehaviour
 
 
             // --- 기존 회전 로직 ---
-            Quaternion slopeRotation = Quaternion.FromToRotation(transform.up, hit.normal);
-            Quaternion targetRotation = slopeRotation * transform.rotation;
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
+            Quaternion slopeRotation = Quaternion.FromToRotation(catMain.up, hit.normal);
+            Quaternion targetRotation = slopeRotation * catMain.rotation;
+            catMain.rotation = Quaternion.Slerp(catMain.rotation, targetRotation, 10f * Time.deltaTime);
         }
         else
         {
