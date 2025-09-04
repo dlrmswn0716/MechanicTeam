@@ -83,7 +83,7 @@ public class UIManager : MonoBehaviour
     //TO-DO : 털뭉치 획득 시 아이콘 활성화
     public void GetAchieve()
     {
-        AchieveObj.GetComponent<Image>().color = Color.red;
+        AchieveObj.SetActive(false);
         isAchieve= true;
     }
 
