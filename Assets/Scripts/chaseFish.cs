@@ -75,18 +75,22 @@ public class chaseFish : MonoBehaviour
 
     bool HasClearLineOfSight(GameObject target)
     {
-        Vector3 origin = transform.position + Vector3.up * 0.5f; // 고양이 눈높이 정도
-        Vector3 dir = (target.transform.position - origin).normalized;
-        float dist = Vector3.Distance(origin, target.transform.position);
+        Vector3 origin = transform.position + Vector3.up * 0.05f;  // 고양이 눈 위치
+        Vector3 toTarget = target.transform.position - origin;
+        float dist = toTarget.magnitude;
+        if (dist <= 0.001f) return true; // 같은 위치라면 바로 true
 
-        // 장애물 체크 (Fish는 무시)
-        if (Physics.Raycast(origin, dir, out RaycastHit hit, dist, obstacleLayer))
+        Vector3 dir = toTarget.normalized;
+
+        // 장애물 레이어만 체크
+        if (Physics.Raycast(origin, dir, dist, obstacleLayer, QueryTriggerInteraction.Ignore))
         {
-            // 맞은 게 Fish면 시야 확보, 아니면 막힘
-            if (!hit.collider.CompareTag(fishTag))
-                return false;
+            Debug.DrawRay(origin, dir * dist, Color.red, 0.1f);
+            return false; // Fish까지 가는 길에 장애물 있음
         }
-        return true;
+
+        Debug.DrawRay(origin, dir * dist, Color.green, 0.1f);
+        return true; // 막는 장애물 없음
     }
     private void OnCollisionEnter(Collision collision)
     {
