@@ -8707,7 +8707,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2305370993313811341, guid: 32f6a89f7c99d324faf1b66fbd7ff7d5, type: 3}
       propertyPath: moveSpeed
-      value: 40
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 2305370993313811341, guid: 32f6a89f7c99d324faf1b66fbd7ff7d5, type: 3}
       propertyPath: groundCheckYOffset
